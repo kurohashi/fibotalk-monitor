@@ -85,14 +85,16 @@ app.post('/monitor', async (req, res) => {
   let planId = (req.body.planid)
   let key = `${gid}:${planId}:${eventName}`
 
-  console.log(key);
   await client.connect()
-
+  
+  console.log(key, client.exists(key));
   if (client.exists(key) != 1) {
+    console.log("does not exist");
     return res.json({ status: 400 });
   } else {
     let schemaData = await client.get(key)
     if (!schemaData) {
+      console.log("schema not found")
       return res.json({ status: 400 });
     }
     let schema = JSON.parse(schemaData)
