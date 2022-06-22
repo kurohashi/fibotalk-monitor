@@ -85,12 +85,12 @@ app.post('/monitor', (req, res) => {
     let planId=(req.body.planid)
     let key=`${gid}:${planId}:${eventName}`
 
-    // await client.connect()
-    // if(client.exists(key)!=1){
-    //     await client.set(key, JSON.stringify(s))
-    // }
-    // let schema=JSON.parse(await client.get(key))
-    let errorLog=(monitor(s, event))
+    await client.connect()
+    if(client.exists(key)!=1){
+        await client.set(key, JSON.stringify(s))
+    }
+    let schema=JSON.parse(await client.get(key))
+    let errorLog=(monitor(schema, event))
     if(typeof errorLog !== 'undefined' && errorLog.length === 0){
         console.log('no errors')
     } else{console.log(errorLog)}
