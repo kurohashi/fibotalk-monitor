@@ -10,61 +10,61 @@ const app = express();
 const PORT = 3000;
 
 
-let s={
-    "name": "Login event",
-    "dimensions": {
-        "appname": {
-            "name": "appname",
-            "isNull": "Null Not Allowed",
-            "required": "Required",
-            "datatype": "Number",
-            "keyName": "appname",
-            "children": {}
-        },
-        "address": {
-            "name": "address",
-            "isNull": "Null Not Allowed",
-            "required": "Optional",
-            "datatype": "Object",
-            "keyName": "address",
-            "children": {
-                "address.m": {
-                    "name": "m",
-                    "isNull": "Null Allowed",
-                    "required": "Required",
-                    "datatype": "Object",
-                    "keyName": "address.m",
-                    "children": {
-                      "address.m.mm": {
-                        "name": "mm",
-                        "isNull": "Null Allowed",
-                        "required": "Optional",
-                        "datatype": "String",
-                        "keyName": "address.m.mm",
-                        "children": {}
-                      }
-                    }
-                  },
-                "address.city": {
-                    "name": "city",
-                    "isNull": "Null Allowed",
-                    "required": "Optional",
-                    "datatype": "Array",
-                    "keyName": "address.city",
-                    "children": {}
-                },
-                "address.street": {
-                    "name": "street",
-                    "isNull": "Null Not Allowed",
-                    "required": "Required",
-                    "datatype": "String",
-                    "keyName": "address.street",
-                    "children": {}
-                }
-            }
-        }
-    }
-}
+// let s={
+//     "name": "Login event",
+//     "dimensions": {
+//         "appname": {
+//             "name": "appname",
+//             "isNull": "Null Not Allowed",
+//             "required": "Required",
+//             "datatype": "Number",
+//             "keyName": "appname",
+//             "children": {}
+//         },
+//         "address": {
+//             "name": "address",
+//             "isNull": "Null Not Allowed",
+//             "required": "Optional",
+//             "datatype": "Object",
+//             "keyName": "address",
+//             "children": {
+//                 "address.m": {
+//                     "name": "m",
+//                     "isNull": "Null Allowed",
+//                     "required": "Required",
+//                     "datatype": "Object",
+//                     "keyName": "address.m",
+//                     "children": {
+//                       "address.m.mm": {
+//                         "name": "mm",
+//                         "isNull": "Null Allowed",
+//                         "required": "Optional",
+//                         "datatype": "String",
+//                         "keyName": "address.m.mm",
+//                         "children": {}
+//                       }
+//                     }
+//                   },
+//                 "address.city": {
+//                     "name": "city",
+//                     "isNull": "Null Allowed",
+//                     "required": "Optional",
+//                     "datatype": "Array",
+//                     "keyName": "address.city",
+//                     "children": {}
+//                 },
+//                 "address.street": {
+//                     "name": "street",
+//                     "isNull": "Null Not Allowed",
+//                     "required": "Required",
+//                     "datatype": "String",
+//                     "keyName": "address.street",
+//                     "children": {}
+//                 }
+//             }
+//         }
+//     }
+// }
 
 
 
@@ -86,9 +86,9 @@ app.post('/monitor', async (req, res) => {
     let key=`${gid}:${planId}:${eventName}`
 
     await client.connect()
-    if(client.exists(key)!=1){
-        await client.set(key, JSON.stringify(s))
-    }
+    // if(client.exists(key)!=1){
+    //     await client.set(key, JSON.stringify(s))
+    // }
     let schema=JSON.parse(await client.get(key))
     let errorLog=(monitor(schema, event))
     if(typeof errorLog !== 'undefined' && errorLog.length === 0){
