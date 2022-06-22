@@ -1,8 +1,8 @@
 const { json } = require('body-parser');
 const express = require('express');
 const redis = require('redis');
-const {monitor} = require("./monitor.js");
-const {mapper} = require("./mapper.js");
+const { monitor } = require("./monitor.js");
+const { mapper } = require("./mapper.js");
 
 const client = redis.createClient();
 const app = express();
@@ -79,47 +79,53 @@ app.get('/', (req, res) => {
 
 
 app.post('/monitor', async (req, res) => {
-    let event=req.body.event;
-    let eventName=req.body.name
-    let gid=(req.body.gid)
-    let planId=(req.body.planid)
-    let key=`${gid}:${planId}:${eventName}`
-
-    await client.connect()
-    // if(client.exists(key)!=1){
-    //     await client.set(key, JSON.stringify(s))
-    // }
-    let schema=JSON.parse(await client.get(key))
-    console.log(JSON.stringify(schema));
-    let errorLog=(monitor(schema, event))
-    if(typeof errorLog !== 'undefined' && errorLog.length === 0){
-        console.log('no errors')
-    } else{console.log(errorLog)}
-
-    // for(let i in err){
-    //     let errMessg=err[i]
-    //     await client.lPush(key+':error', errMessg)
-    // }
-    // await client.quit()
-    res.json(req.body);
-  });
+  let event = req.body.event;
+  let eventName = req.body.name
+  let gid = (req.body.gid)
+  let planId = (req.body.planid)
+  let key = `${gid}:${planId}:${eventName}`
 
 
-  app.post('/setschema', async (req, res) => {
-    let originalSchema=req.body.schema;
-    let gid=(req.body.gid)
-    let planId=(req.body.planid)
+  await client.connect()
 
-    let newSchema=mapper(originalSchema)
-    await client.connect()
-    for(let i in newSchema.events){
-      let eventSchema=newSchema.events[i]
-      await client.set(`${gid}:${planId}:${eventSchema.name}`, JSON.stringify(eventSchema))
+  if (client.exists(key) != 1) {
+    return res.json({ status: 400 });
+  } else {
+    let schemaData = await client.get(key)
+    if (!schema) {
+      return res.json({ status: 400 });
     }
-    await client.quit()
-    console.log(JSON.stringify(newSchema, 2, 2))
-    res.json(req.body);
-  });
+    let schema = JSON.parse(schemaData)
+    let errorLog = (monitor(schema, event))
+    if (typeof errorLog !== 'undefined' && errorLog.length === 0) {
+      console.log('no errors')
+    } else { console.log(errorLog) }
+  }
+
+  // for(let i in err){
+  //     let errMessg=err[i]
+  //     await client.lPush(key+':error', errMessg)
+  // }
+  await client.quit()
+  res.json(req.body);
+});
+
+
+app.post('/setschema', async (req, res) => {
+  let originalSchema = req.body.schema;
+  let gid = (req.body.gid)
+  let planId = (req.body.planid)
+
+  let newSchema = mapper(originalSchema)
+  await client.connect()
+  for (let i in newSchema.events) {
+    let eventSchema = newSchema.events[i]
+    await client.set(`${gid}:${planId}:${eventSchema.name}`, JSON.stringify(eventSchema))
+  }
+  await client.quit()
+  console.log(JSON.stringify(newSchema, 2, 2))
+  res.json(req.body);
+});
 
 
 // About page
@@ -128,7 +134,7 @@ app.get('/about', (req, res) => {
 })
 
 // 404 page
-app.use((req, res, next) =>{
+app.use((req, res, next) => {
   res.status(404);
 
   // respond with html page
@@ -137,7 +143,7 @@ app.use((req, res, next) =>{
     return;
   }
   // respond with json
-  else if (req.accepts('json')){
+  else if (req.accepts('json')) {
     res.send({
       status: 404,
       error: 'Not found'
