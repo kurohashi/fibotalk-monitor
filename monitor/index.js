@@ -113,7 +113,12 @@ app.post('/monitor', async (req, res) => {
 
     let newSchema=mapper(originalSchema)
     await client.connect()
-    await client.set(key, JSON.stringify(newSchema))
+    for(let i in newSchema.events){
+      let eventSchema=newSchema.events[i]
+      console.log(key+eventSchema.name)
+      console.log(eventSchema)
+      await client.set(key+eventSchema.name, JSON.stringify(eventSchema))
+    }
     await client.quit()
     console.log(JSON.stringify(newSchema, 2, 2))
     res.json(req.body);
