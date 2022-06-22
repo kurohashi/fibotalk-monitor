@@ -87,8 +87,8 @@ app.post('/monitor', async (req, res) => {
 
   await client.connect()
   
-  console.log(key, client.exists(key));
-  if (client.exists(key) != 1) {
+  console.log(key, await client.exists(key));
+  if (await client.exists(key) != 1) {
     console.log("does not exist");
     return res.json({ status: 400 });
   } else {
