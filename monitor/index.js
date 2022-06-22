@@ -104,7 +104,7 @@ app.post('/monitor', async (req, res) => {
   });
 
 
-  app.post('/setschema', (req, res) => {
+  app.post('/setschema', async (req, res) => {
     let originalSchema=req.body.schema;
     let gid=(req.body.gid)
     let planId=(req.body.planid)
