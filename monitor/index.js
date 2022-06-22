@@ -105,15 +105,16 @@ app.post('/monitor', async (req, res) => {
 
 
   app.post('/setschema', (req, res) => {
-    let originalSchema=JSON.parse(req.body.schema);
+    let originalSchema=req.body.schema;
     let gid=(req.body.gid)
     let planId=(req.body.planid)
-    let key=`${gid}:${planId}:schema`
+    let eventName=req.body.name
+    let key=`${gid}:${planId}:${eventName}`
 
     let newSchema=mapper(originalSchema)
-    // await client.connect()
-    // await client.set(key, JSON.stringify(newSchema))
-    // await client.quit()
+    await client.connect()
+    await client.set(key, JSON.stringify(newSchema))
+    await client.quit()
     console.log(JSON.stringify(newSchema, 2, 2))
     res.json(req.body);
   });
