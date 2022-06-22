@@ -90,6 +90,7 @@ app.post('/monitor', async (req, res) => {
     //     await client.set(key, JSON.stringify(s))
     // }
     let schema=JSON.parse(await client.get(key))
+    console.log(JSON.stringify(schema));
     let errorLog=(monitor(schema, event))
     if(typeof errorLog !== 'undefined' && errorLog.length === 0){
         console.log('no errors')
