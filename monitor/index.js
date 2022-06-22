@@ -79,7 +79,7 @@ app.get('/', (req, res) => {
 
 
 app.post('/monitor', (req, res) => {
-    let event=JSON.parse(req.body.event);
+    let event=req.body.event;
     let eventName=req.body.name
     let gid=(req.body.gid)
     let planId=(req.body.planid)
