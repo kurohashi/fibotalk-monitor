@@ -78,7 +78,7 @@ app.get('/', (req, res) => {
 })
 
 
-app.post('/monitor', (req, res) => {
+app.post('/monitor', async (req, res) => {
     let event=req.body.event;
     let eventName=req.body.name
     let gid=(req.body.gid)
